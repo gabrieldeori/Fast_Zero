@@ -13,9 +13,8 @@ database = []
 def read_root():
     return {'message': 'Hello World!'}
 
+
 @app.get
-
-
 @app.post('/users/', status_code=HTTPStatus.CREATED, response_model=UserPublic)
 def create_user(user: UserSchema):
     # breakpoint() # Para a aplicação ('l' mostra a linha, 'q' sai do debug)
@@ -36,9 +35,9 @@ def read_users():
         'users': database,
     }
 
+
 @app.get('/users/{user_id}', response_model=UserPublic)
 def read_user(user_id: int):
-
     user_with_id = database[user_id - 1]
 
     return user_with_id
