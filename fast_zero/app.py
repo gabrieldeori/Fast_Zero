@@ -34,6 +34,7 @@ def read_users():
         'users': database,
     }
 
+
 @app.put('/users/{user_id}', response_model=UserPublic)
 def update_user(user_id: int, user: UserSchema):
     user_with_id = UserDB(
