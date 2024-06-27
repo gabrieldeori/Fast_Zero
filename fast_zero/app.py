@@ -16,17 +16,17 @@ def read_root():
 
 @app.post('/users/', status_code=HTTPStatus.CREATED, response_model=UserPublic)
 def create_user(user: UserSchema):
-
     # breakpoint() # Para a aplicação ('l' mostra a linha, 'q' sai do debug)
 
     user_with_id = UserDB(
         id=len(database) + 1,
-        **user.model_dump()  # Dado pra dicionário, ** é ...
+        **user.model_dump(),  # Dado pra dicionário, ** é ...
     )
 
     database.append(user_with_id)
 
     return user_with_id
+
 
 @app.get('/users/', status_code=HTTPStatus.OK, response_model=UserList)
 def read_users():
