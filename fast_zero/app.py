@@ -40,8 +40,7 @@ def read_users():
 def read_user(user_id: int):
     if user_id < 1 or user_id > len(database):
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail='User not found'
+            status_code=HTTPStatus.NOT_FOUND, detail='User not found'
         )
 
     user_with_id = database[user_id - 1]
