@@ -67,9 +67,7 @@ def read_user(
     user_id: int,
     session: Session = Depends(get_session),
 ):
-    db_user = session.scalar(
-        select(User).where(User.id == user_id)
-    )
+    db_user = session.scalar(select(User).where(User.id == user_id))
 
     if not db_user:
         raise HTTPException(
@@ -85,9 +83,7 @@ def update_user(
     user: UserSchema,
     session: Session = Depends(get_session),
 ):
-    db_user = session.scalar(
-        select(User).where(User.id == user_id)
-    )
+    db_user = session.scalar(select(User).where(User.id == user_id))
 
     if not db_user:
         raise HTTPException(
