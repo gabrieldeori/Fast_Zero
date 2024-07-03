@@ -20,7 +20,6 @@ def read_root():
 @app.get
 @app.post('/users/', status_code=HTTPStatus.CREATED, response_model=UserPublic)
 def create_user(user: UserSchema, session=Depends(get_session)):
-    session = get_session()
 
     db_user = session.scalar(
         select(User).where(
