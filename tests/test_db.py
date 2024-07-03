@@ -1,7 +1,6 @@
-from sqlalchemy import create_engine, select
-from sqlalchemy.orm import Session
+from sqlalchemy import select
 
-from fast_zero.models import User, table_registry
+from fast_zero.models import User
 
 TEST_USERNAME = 'test'
 TEST_EMAIL = 'test@test.com'
@@ -18,26 +17,15 @@ def test_class_create_user():
     assert user.password == TEST_PASSWORD
 
 
-def test_create_user():
+def test_create_user(session):
     # engine = create_engine('sqlite:///database.db')
-    engine = create_engine('sqlite:///:memory:')
-    # Dura apenas durante o teste
+    user = User(
+        username=TEST_USERNAME, email=TEST_EMAIL, password=TEST_PASSWORD
+    )
 
-    table_registry.metadata.create_all(engine)
+    session.add(user)
+    session.commit()
 
-    with Session(engine) as session:
-        user = User(
-            username=TEST_USERNAME, email=TEST_EMAIL, password=TEST_PASSWORD
-        )
+    result = session.scalar(select(User).where(User.email == TEST_EMAIL))
 
-        session.add(user)
-        session.commit()
-        # session.refresh(user)
-
-        result = session.scalar(
-            select(User).where(User.email == TEST_EMAIL)
-        )
-        # Query Mapeia e retorna resultado como objeto
-
-    # assert user.id == 1
     assert result.username == TEST_USERNAME
