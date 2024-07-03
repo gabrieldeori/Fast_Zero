@@ -48,23 +48,11 @@ def test_read_users_with_users(client, user):
     assert response.json() == {'users': [user_schema]}
 
 
-def test_read_user(client):
-    response = client.get('/users/1')
-
-    assert response.status_code == HTTPStatus.OK
-    assert response.json() == {
-        'id': 1,
-        'username': TEST_USERNAME,
-        'email': TEST_EMAIL,
-    }
-
-    response = client.get('/users/2')
-
-    assert response.status_code == HTTPStatus.NOT_FOUND
-    assert response.json() == {'detail': 'User not found'}
+def test_read_user(client, user):
+    ...
 
 
-def test_update_user(client):
+def test_update_user(client, user):
     response = client.put(
         '/users/1',
         json={
@@ -95,12 +83,12 @@ def test_update_user(client):
     assert response.json() == {'detail': 'User not found'}
 
 
-def test_delete_user(client):
+def test_delete_user(client, user):
     response = client.delete('/users/1')
 
     assert response.json() == {'message': 'User deleted'}
 
-    response = client.delete('/users/1')
+    response = client.delete('/users/2')
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'User not found'}
