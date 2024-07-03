@@ -1,5 +1,8 @@
 from http import HTTPStatus
 
+from fast_zero.schemas import UserPublic
+from tests.test_db import TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME
+
 
 def test_read_root_must_return_ok_and_Hello_World(client):
     # Act (Ação)
@@ -14,17 +17,17 @@ def test_create_user(client):
     response = client.post(
         '/users/',
         json={
-            'username': 'testusername',
-            'email': 'test@email.com',
-            'password': 'password',
+            'username': TEST_USERNAME,
+            'email': TEST_EMAIL,
+            'password': TEST_PASSWORD,
         },
     )
 
     assert response.status_code == HTTPStatus.CREATED
     assert response.json() == {
         'id': 1,
-        'username': 'testusername',
-        'email': 'test@email.com',
+        'username': TEST_USERNAME,
+        'email': TEST_EMAIL,
     }
 
 
@@ -33,15 +36,16 @@ def test_read_users(client):
     # Vai depender do teste acima, má prática
     # Pelo que entendi os testes são executados em ordem alfabética
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {
-        'users': [
-            {
-                'id': 1,
-                'username': 'testusername',
-                'email': 'test@email.com',
-            }
-        ]
-    }
+    assert response.json() == {'users': []}
+
+
+def test_read_users_with_users(client, user):
+    user_schema = UserPublic.model_validate(user).model_dump()
+
+    response = client.get('/users/')
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {'users': [user_schema]}
 
 
 def test_read_user(client):
@@ -50,8 +54,8 @@ def test_read_user(client):
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
         'id': 1,
-        'username': 'testusername',
-        'email': 'test@email.com',
+        'username': TEST_USERNAME,
+        'email': TEST_EMAIL,
     }
 
     response = client.get('/users/2')
@@ -64,25 +68,25 @@ def test_update_user(client):
     response = client.put(
         '/users/1',
         json={
-            'password': 'password',
-            'username': 'testuser',
-            'email': 'test@email.com',
+            'password': TEST_PASSWORD,
+            'username': TEST_USERNAME,
+            'email': TEST_EMAIL,
             'id': 1,
         },
     )
 
     assert response.json() == {
-        'username': 'testuser',
-        'email': 'test@email.com',
+        'username': TEST_USERNAME,
+        'email': TEST_EMAIL,
         'id': 1,
     }
 
     response = client.put(
         '/users/2',
         json={
-            'password': 'password',
-            'username': 'testuser',
-            'email': 'test@email.com',
+            'password': TEST_PASSWORD,
+            'username': TEST_USERNAME,
+            'email': TEST_EMAIL,
             'id': 1,
         },
     )
